@@ -1,7 +1,9 @@
 {
-  "extends": "standard",
+  "root": true,
+  "extends": ["plugin:vue/essential", "@vue/prettier"],
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "globals": {
     "chrome": true
