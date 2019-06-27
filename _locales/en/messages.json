@@ -1,8 +1,11 @@
 {
-   "appName": {
-      "message": "Inspect network"
-   },
-   "description": {
-      "message": "Just replace any network response!"
-   }
+  "appName": {
+    "message": "Inspect network"
+  },
+  "description": {
+    "message": "Just replace any network response!"
+  },
+  "newInspect": {
+    "message": "New Inspect"
+  }
 }
