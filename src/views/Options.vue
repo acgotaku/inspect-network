@@ -5,7 +5,7 @@
     </nav>
     <b-container>
       <div class="add-tab">
-        <b-button variant="success">New Inspect</b-button>
+        <b-button variant="success">{{ geti18nText('newInspect') }}</b-button>
       </div>
       <b-card no-body>
         <b-tabs card>
@@ -15,9 +15,9 @@
                 <b-form-row>
                   <b-col cols="8">
                     <b-form-group
-                      label="Target URL:"
+                      :label="geti18nText('targetURL')"
                       label-for="url"
-                      description="URL must be start with http or https."
+                      :description="geti18nText('URLDesc')"
                     >
                       <b-form-input
                         id="url"
@@ -29,9 +29,9 @@
                   </b-col>
                   <b-col cols="3" offset="1">
                     <b-form-group
-                      label="Match Mode:"
+                      :label="geti18nText('matchMode')"
                       label-for="mode"
-                      description="Please select match mode"
+                      :description="geti18nText('modeDesc')"
                     >
                       <b-form-select
                         v-model="selected"
@@ -73,19 +73,16 @@ export default {
     return {
       URL: localStorage.getItem('URL') || '',
       cm: null,
-      dismissCountDown: 0,
       selected: null,
       options: [
-        { value: null, text: 'Please select an option' },
-        { value: 'a', text: 'This is First option' },
-        { value: 'b', text: 'Selected Option' },
+        { value: null, text: 'URL match' },
+        { value: 'a', text: 'URL wildcard' },
+        { value: 'b', text: 'URL regex' },
         { value: { C: '3PO' }, text: 'This is an option with object value' },
         { value: 'd', text: 'This one is disabled', disabled: true }
       ],
       replacedText: localStorage.getItem('text') || defaultText,
-      name: chrome.i18n.getMessage('appName'),
-      newInspect: chrome.i18n.getMessage('newInspect'),
-      inspects: localStorage.getItem('inspects') || 1
+      name: chrome.i18n.getMessage('appName')
     };
   },
   mounted() {
@@ -107,6 +104,9 @@ export default {
         variant: 'success',
         solid: true
       });
+    },
+    geti18nText(name) {
+      return chrome.i18n.getMessage(name);
     }
   }
 };

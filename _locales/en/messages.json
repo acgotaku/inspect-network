@@ -8,10 +8,28 @@
   "newInspect": {
     "message": "New Inspect"
   },
+  "inspect": {
+    "message": "审查"
+  },
   "targetURL": {
-    "message": "Target URL"
+    "message": "Target URL:"
   },
   "URLDesc": {
-    "message": "URL must be start with http or https."
+    "message": "You can input hostname or full URL."
+  },
+  "matchMode": {
+    "message": "Match Mode:"
+  },
+  "modeDesc": {
+    "message": "Please select one match mode."
+  },
+  "URLMatch": {
+    "message": "URL Match"
+  },
+  "URLWildcard": {
+    "message": "URL wildcard"
+  },
+  "URLRegex": {
+    "message": "URL regex"
   }
 }

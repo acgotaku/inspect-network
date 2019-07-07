@@ -7,5 +7,29 @@
   },
   "newInspect": {
     "message": "新的审查"
+  },
+  "inspect": {
+    "message": "审查"
+  },
+  "targetURL": {
+    "message": "目标网址："
+  },
+  "URLDesc": {
+    "message": "你可以输入域名或者完整网址。"
+  },
+  "matchMode": {
+    "message": "匹配模式："
+  },
+  "modeDesc": {
+    "message": "请选择一个匹配模式。"
+  },
+  "URLMatch": {
+    "message": "网址匹配"
+  },
+  "URLWildcard": {
+    "message": "网址通配符"
+  },
+  "URLRegex": {
+    "message": "网址正则匹配"
   }
 }
