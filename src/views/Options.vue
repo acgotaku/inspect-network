@@ -12,17 +12,42 @@
           <b-tab title="Tab 1" active>
             <b-card-body>
               <b-form @submit.stop.prevent>
-                <label for="url">Target URL</label>
-                <b-input
-                  type="text"
-                  id="url"
-                  aria-describedby="url-help-block"
-                ></b-input>
-                <b-form-text id="url-help-block">
-                  URL must be start with http or https.
-                </b-form-text>
+                <b-form-row>
+                  <b-col cols="8">
+                    <b-form-group
+                      label="Target URL:"
+                      label-for="url"
+                      description="URL must be start with http or https."
+                    >
+                      <b-form-input
+                        id="url"
+                        v-model="URL"
+                        type="text"
+                        required
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-col>
+                  <b-col cols="3" offset="1">
+                    <b-form-group
+                      label="Match Mode:"
+                      label-for="mode"
+                      description="Please select match mode"
+                    >
+                      <b-form-select
+                        v-model="selected"
+                        :options="options"
+                      ></b-form-select>
+                    </b-form-group>
+                  </b-col>
+                </b-form-row>
+                <label>Replace Content:</label>
+                <div class="code-editer"></div>
+                <div class="action">
+                  <b-button variant="success" class="save" @click="save"
+                    >Save</b-button
+                  >
+                </div>
               </b-form>
-              <div class="code-editer"></div>
             </b-card-body>
           </b-tab>
           <b-tab title="Tab 2">
@@ -40,23 +65,49 @@ import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
 
+const defaultText =
+  "(function(){\n  \"use strict\";\n  /* Start of your code */\n  function greetMe(yourName) {\n    alert('Hello ' + yourName);\n  }\n  \n  greetMe('World');\n  /* End of your code */\n})();";
+
 export default {
   data() {
     return {
+      URL: localStorage.getItem('URL') || '',
+      cm: null,
+      dismissCountDown: 0,
+      selected: null,
+      options: [
+        { value: null, text: 'Please select an option' },
+        { value: 'a', text: 'This is First option' },
+        { value: 'b', text: 'Selected Option' },
+        { value: { C: '3PO' }, text: 'This is an option with object value' },
+        { value: 'd', text: 'This one is disabled', disabled: true }
+      ],
+      replacedText: localStorage.getItem('text') || defaultText,
       name: chrome.i18n.getMessage('appName'),
       newInspect: chrome.i18n.getMessage('newInspect'),
       inspects: localStorage.getItem('inspects') || 1
     };
   },
   mounted() {
-    const myCodeMirror = CodeMirror(document.querySelector('.code-editer'), {
-      value: 'function myScript(){return 100;}\n',
+    this.cm = CodeMirror(document.querySelector('.code-editer'), {
+      value: this.replacedText,
       mode: 'javascript',
       theme: 'monokai',
       indentUnit: 2,
       lineNumbers: true
     });
-    console.log(myCodeMirror);
+  },
+  methods: {
+    save() {
+      const text = this.cm.getValue();
+      localStorage.setItem('text', text);
+      localStorage.setItem('URL', this.URL);
+      this.$bvToast.toast('Save Success', {
+        title: `Message`,
+        variant: 'success',
+        solid: true
+      });
+    }
   }
 };
 </script>
@@ -82,5 +133,13 @@ export default {
 }
 .code-editer {
   border: 1px solid #ddd;
+}
+.CodeMirror {
+  height: auto;
+}
+.action {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0;
 }
 </style>

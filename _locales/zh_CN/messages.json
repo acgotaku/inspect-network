@@ -1,11 +1,11 @@
 {
   "appName": {
-    "message": "监控网络"
+    "message": "审查网络"
   },
   "description": {
     "message": "可以自由的替换网络请求！"
   },
   "newInspect": {
-    "message": "新的监控"
+    "message": "新的审查"
   }
 }

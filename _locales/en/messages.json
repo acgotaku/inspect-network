@@ -7,5 +7,11 @@
   },
   "newInspect": {
     "message": "New Inspect"
+  },
+  "targetURL": {
+    "message": "Target URL"
+  },
+  "URLDesc": {
+    "message": "URL must be start with http or https."
   }
 }
