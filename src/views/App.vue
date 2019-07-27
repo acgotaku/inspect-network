@@ -22,4 +22,8 @@ export default {
   padding: 0;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+#app {
+  height: 100%;
+}
 </style>

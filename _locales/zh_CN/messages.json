@@ -8,6 +8,12 @@
   "newInspect": {
     "message": "新的审查"
   },
+  "globalConfig": {
+    "message": "全局设置"
+  },
+  "syncToCloud": {
+    "message": "同步到云上"
+  },
   "inspect": {
     "message": "审查"
   },

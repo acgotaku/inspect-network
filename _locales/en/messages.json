@@ -8,8 +8,14 @@
   "newInspect": {
     "message": "New Inspect"
   },
+  "globalConfig": {
+    "message": "Global config"
+  },
+  "syncToCloud": {
+    "message": "Sync to the cloud."
+  },
   "inspect": {
-    "message": "审查"
+    "message": "Inspect"
   },
   "targetURL": {
     "message": "Target URL:"
@@ -24,7 +30,7 @@
     "message": "Please select one match mode."
   },
   "URLMatch": {
-    "message": "URL Match"
+    "message": "URL match"
   },
   "URLWildcard": {
     "message": "URL wildcard"

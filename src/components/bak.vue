@@ -1,48 +1,60 @@
-<template>
-  <div class="content">
-    <nav class="header">
-      <h1 class="header-title">{{ name }}</h1>
-    </nav>
-    <b-container>
-      <div class="add-tab">
-        <b-button variant="success">{{ geti18nText('newInspect') }}</b-button>
+<template slot="tabs">
+  <b-card-body>
+    <b-form @submit.stop.prevent>
+      <b-form-row>
+        <b-col cols="8">
+          <b-form-group
+            :label="geti18nText('targetURL')"
+            label-for="url"
+            :description="geti18nText('URLDesc')"
+          >
+            <b-form-input
+              id="url"
+              v-model="URL"
+              type="text"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </b-col>
+        <b-col cols="3" offset="1">
+          <b-form-group
+            :label="geti18nText('matchMode')"
+            label-for="mode"
+            :description="geti18nText('modeDesc')"
+          >
+            <b-form-select
+              v-model="selected"
+              :options="options"
+            ></b-form-select>
+          </b-form-group>
+        </b-col>
+      </b-form-row>
+      <label>Replace Content:</label>
+      <div class="code-editer"></div>
+      <div class="action">
+        <b-button variant="success" class="save" @click="save">Save</b-button>
       </div>
-      <b-card no-body>
-        <div class="config">
-          <h2 class="config-title">{{ geti18nText('globalConfig') }}</h2>
-          <b-form-checkbox v-model="sync">
-            {{ geti18nText('syncToCloud') }}
-          </b-form-checkbox>
-        </div>
-        <Tabs>
-          <TabPane label="Tab 1">
-            <Pane />
-          </TabPane>
-          <TabPane label="Tab 2"> <Pane /></TabPane>
-        </Tabs>
-      </b-card>
-    </b-container>
-  </div>
+    </b-form>
+  </b-card-body>
 </template>
 
 <script>
-import Tabs from '/components/tabs/Tabs.vue';
-import TabPane from '/components/tabs/TabPane.vue';
-import Pane from '/components/Pane.vue';
+import CodeMirror from 'codemirror/lib/codemirror.js';
+import 'codemirror/mode/javascript/javascript.js';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/monokai.css';
 
 const defaultText =
   "(function(){\n  \"use strict\";\n  /* Start of your code */\n  function greetMe(yourName) {\n    alert('Hello ' + yourName);\n  }\n  \n  greetMe('World');\n  /* End of your code */\n})();";
 
 export default {
-  components: {
-    Tabs,
-    TabPane,
-    Pane
+  props: {
+    index: Number,
+    active: Boolean
   },
   data() {
     return {
       URL: localStorage.getItem('URL') || '',
-      sync: true,
       cm: null,
       selected: 'match',
       options: [
@@ -50,11 +62,18 @@ export default {
         { value: 'wildcard', text: this.geti18nText('URLWildcard') },
         { value: 'regex', text: this.geti18nText('URLRegex') }
       ],
-      replacedText: localStorage.getItem('text') || defaultText,
-      name: chrome.i18n.getMessage('appName')
+      replacedText: localStorage.getItem('text') || defaultText
     };
   },
-  mounted() {},
+  mounted() {
+    this.cm = CodeMirror(document.querySelector('.code-editer'), {
+      value: this.replacedText,
+      mode: 'javascript',
+      theme: 'monokai',
+      indentUnit: 2,
+      lineNumbers: true
+    });
+  },
   methods: {
     save() {
       const text = this.cm.getValue();
@@ -86,44 +105,11 @@ export default {
           });
         }
       }
-      this.showSavedInfo();
     }
   }
 };
 </script>
-
 <style lang="scss">
-.content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-.card {
-  flex: 1;
-}
-.header {
-  width: 100%;
-  height: 96px;
-  display: flex;
-  align-items: center;
-  background-color: #8191f1;
-
-  &-title {
-    color: #fff;
-    font-size: 4rem;
-    margin-left: 40px;
-  }
-}
-.add-tab {
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 0;
-}
 .code-editer {
   border: 1px solid #ddd;
 }
@@ -134,12 +120,5 @@ export default {
   display: flex;
   justify-content: flex-end;
   padding: 16px 0;
-}
-.config {
-  padding: 1.25rem;
-
-  &-title {
-    font-size: 1.5rem;
-  }
 }
 </style>
