@@ -5,7 +5,9 @@
     </nav>
     <b-container>
       <div class="add-tab">
-        <b-button variant="success">{{ geti18nText('newInspect') }}</b-button>
+        <b-button variant="success" @click="addTabList">
+          {{ geti18nText('newInspect') }}
+        </b-button>
       </div>
       <b-card no-body>
         <div class="config">
@@ -15,10 +17,9 @@
           </b-form-checkbox>
         </div>
         <Tabs>
-          <TabPane label="Tab 1">
+          <TabPane :label="getTabTitle(tab)" v-for="tab in tabList" :key="tab">
             <Pane />
           </TabPane>
-          <TabPane label="Tab 2"> <Pane /></TabPane>
         </Tabs>
       </b-card>
     </b-container>
@@ -30,9 +31,6 @@ import Tabs from '/components/tabs/Tabs.vue';
 import TabPane from '/components/tabs/TabPane.vue';
 import Pane from '/components/Pane.vue';
 
-const defaultText =
-  "(function(){\n  \"use strict\";\n  /* Start of your code */\n  function greetMe(yourName) {\n    alert('Hello ' + yourName);\n  }\n  \n  greetMe('World');\n  /* End of your code */\n})();";
-
 export default {
   components: {
     Tabs,
@@ -41,52 +39,50 @@ export default {
   },
   data() {
     return {
-      URL: localStorage.getItem('URL') || '',
       sync: true,
-      cm: null,
-      selected: 'match',
-      options: [
-        { value: 'match', text: this.geti18nText('URLMatch') },
-        { value: 'wildcard', text: this.geti18nText('URLWildcard') },
-        { value: 'regex', text: this.geti18nText('URLRegex') }
-      ],
-      replacedText: localStorage.getItem('text') || defaultText,
+      tabList: [1],
       name: chrome.i18n.getMessage('appName')
     };
   },
-  mounted() {},
+  mounted() {
+    console.log(this);
+    this.getConfig('sync');
+    this.getConfig('tabList');
+  },
   methods: {
-    save() {
-      const text = this.cm.getValue();
-      localStorage.setItem('text', text);
-      localStorage.setItem('URL', this.URL);
-      this.$bvToast.toast('Save Success', {
-        title: `Message`,
-        variant: 'success',
-        solid: true
-      });
-    },
     geti18nText(name) {
       return chrome.i18n.getMessage(name);
     },
     getTabTitle(index) {
       return chrome.i18n.getMessage('inspect') + ' ' + index;
     },
-    saveConfig() {
-      const configData = {
-        sync: this.sync
-      };
-      for (let key in configData) {
-        chrome.storage.local.set({ [key]: configData[key] }, () => {
-          console.log('chrome local set: %s, %s', key, configData[key]);
+    getConfig(key) {
+      chrome.storage.sync.get(key, items => {
+        chrome.storage.local.set({ [key]: items[key] }, () => {
+          console.log('chrome first local set: %s, %s', key, items[key]);
         });
-        if (configData['sync'] === true) {
-          chrome.storage.sync.set({ [key]: configData[key] }, () => {
-            console.log('chrome sync set: %s, %s', key, configData[key]);
-          });
+      });
+      chrome.storage.local.get(key, items => {
+        if (items[key]) {
+          this[key] = items[key];
         }
+      });
+    },
+    addTabList() {
+      const last = this.tabList.slice().pop();
+      this.tabList.push(last + 1);
+    }
+  },
+  watch: {
+    sync: function(val) {
+      if (val) {
+        chrome.storage.sync.set({ sync: val }, () => {
+          console.log('chrome sync set: %s, %s', 'sync', val);
+        });
       }
-      this.showSavedInfo();
+      chrome.storage.local.set({ sync: val }, () => {
+        console.log('chrome local set: %s, %s', 'sync', val);
+      });
     }
   }
 };

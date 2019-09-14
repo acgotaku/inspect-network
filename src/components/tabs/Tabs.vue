@@ -56,6 +56,8 @@ $white: #fff;
     list-style: none;
     display: flex;
     border-bottom: 1px solid $border-color;
+    white-space: nowrap;
+    overflow-x: auto;
   }
 
   &-item {

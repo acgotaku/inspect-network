@@ -33,6 +33,7 @@
       <div ref="code" class="code"></div>
       <div class="action">
         <b-button variant="success" class="save" @click="save">Save</b-button>
+        <b-button variant="danger" class="remove">Remove</b-button>
       </div>
     </b-form>
   </b-card-body>
@@ -72,7 +73,6 @@ export default {
   },
   watch: {
     'tabPane.active': function(val) {
-      console.log(val);
       if (val && this.cm) {
         this.cm.refresh();
       }
@@ -112,5 +112,8 @@ export default {
 .code {
   flex: 1;
   position: relative;
+}
+.remove {
+  margin-left: 16px;
 }
 </style>

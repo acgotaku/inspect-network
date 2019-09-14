@@ -1,20 +1,20 @@
-const gulp = require("gulp");
-const del = require("del");
-const plumber = require("gulp-plumber");
+const gulp = require('gulp');
+const del = require('del');
+const plumber = require('gulp-plumber');
 
-const imagemin = require("gulp-imagemin");
-const mozjpeg = require("imagemin-mozjpeg");
-const pngquant = require("imagemin-pngquant");
-const exec = require("child_process").exec;
+const imagemin = require('gulp-imagemin');
+const mozjpeg = require('imagemin-mozjpeg');
+const pngquant = require('imagemin-pngquant');
+const exec = require('child_process').exec;
 
 const paths = {
   images: {
-    src: "src/images/**/*",
-    dest: "dist/images/"
+    src: 'src/images/**/*',
+    dest: 'dist/images/'
   },
   copys: {
-    src: ["_locales/**/*", "background.js", "manifest.json"],
-    dest: "dist/"
+    src: ['_locales/**/*', 'background.js', 'manifest.json'],
+    dest: 'dist/'
   }
 };
 
@@ -22,12 +22,12 @@ const config = {
   plumberConfig: {
     errorHandler: function(err) {
       console.log(err.toString());
-      this.emit("end");
+      this.emit('end');
     }
   }
 };
 
-const clean = () => del(["dist"]);
+const clean = () => del(['dist']);
 
 function images() {
   return gulp
@@ -43,7 +43,7 @@ function images() {
 
 function copys() {
   return gulp
-    .src(paths.copys.src, { base: "." })
+    .src(paths.copys.src, { base: '.' })
     .pipe(gulp.dest(paths.copys.dest));
 }
 
@@ -53,7 +53,7 @@ function watch() {
 }
 
 function parcel() {
-  exec("parcel watch src/options.html --no-hmr");
+  exec('parcel watch src/options.html --no-hmr');
 }
 const build = gulp.parallel(images, copys);
 
