@@ -23,7 +23,7 @@
             :description="geti18nText('modeDesc')"
           >
             <b-form-select
-              v-model="selected"
+              v-model="matchMode"
               :options="options"
             ></b-form-select>
           </b-form-group>
@@ -48,11 +48,15 @@ const defaultText =
   "(function(){\n  \"use strict\";\n  /* Start of your code */\n  function greetMe(yourName) {\n    alert('Hello ' + yourName);\n  }\n  \n  greetMe('World');\n  /* End of your code */\n})();";
 
 export default {
+  props: {
+    index: Number,
+    sync: Boolean
+  },
   data() {
     return {
       URL: localStorage.getItem('URL') || '',
       cm: null,
-      selected: 'match',
+      matchMode: 'match',
       options: [
         { value: 'match', text: this.geti18nText('URLMatch') },
         { value: 'wildcard', text: this.geti18nText('URLWildcard') },
@@ -70,6 +74,8 @@ export default {
       indentUnit: 2,
       lineNumbers: true
     });
+    this.getPaneData('inspect' + this.index);
+    console.log(this);
   },
   watch: {
     'tabPane.active': function(val) {
@@ -81,8 +87,13 @@ export default {
   methods: {
     save() {
       const text = this.cm.getValue();
-      localStorage.setItem('text', text);
-      localStorage.setItem('URL', this.URL);
+      const key = 'inspect' + this.index;
+      const paneData = {
+        URL: this.URL,
+        matchMode: this.matchMode,
+        replacedText: text
+      };
+      this.savePaneData(key, paneData);
       this.$bvToast.toast('Save Success', {
         title: `Message`,
         variant: 'success',
@@ -91,6 +102,29 @@ export default {
     },
     geti18nText(name) {
       return chrome.i18n.getMessage(name);
+    },
+    getPaneData(key) {
+      chrome.storage.sync.get(key, items => {
+        chrome.storage.local.set({ [key]: items[key] }, () => {
+          console.log('chrome first local set: %s, %s', key, items[key]);
+        });
+      });
+      chrome.storage.local.get(key, items => {
+        const paneData = items[key];
+        for (const paneKey in paneData) {
+          this[paneKey] = paneData[paneKey];
+        }
+      });
+    },
+    savePaneData(key, val) {
+      if (this.sync) {
+        chrome.storage.sync.set({ [key]: val }, () => {
+          console.log('chrome sync set: %s, %s', key, val);
+        });
+      }
+      chrome.storage.local.set({ [key]: val }, () => {
+        console.log('chrome local set: %s, %s', key, val);
+      });
     }
   }
 };

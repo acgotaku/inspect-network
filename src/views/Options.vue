@@ -18,7 +18,7 @@
         </div>
         <Tabs>
           <TabPane :label="getTabTitle(tab)" v-for="tab in tabList" :key="tab">
-            <Pane />
+            <Pane :index="tab" :sync="sync" />
           </TabPane>
         </Tabs>
       </b-card>
@@ -45,7 +45,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this);
     this.getConfig('sync');
     this.getConfig('tabList');
   },
@@ -63,7 +62,7 @@ export default {
         });
       });
       chrome.storage.local.get(key, items => {
-        if (items[key]) {
+        if (items[key] !== undefined) {
           this[key] = items[key];
         }
       });
@@ -75,11 +74,9 @@ export default {
   },
   watch: {
     sync: function(val) {
-      if (val) {
-        chrome.storage.sync.set({ sync: val }, () => {
-          console.log('chrome sync set: %s, %s', 'sync', val);
-        });
-      }
+      chrome.storage.sync.set({ sync: val }, () => {
+        console.log('chrome sync set: %s, %s', 'sync', val);
+      });
       chrome.storage.local.set({ sync: val }, () => {
         console.log('chrome local set: %s, %s', 'sync', val);
       });
@@ -101,6 +98,7 @@ export default {
 }
 .card {
   flex: 1;
+  min-height: 780px;
 }
 .header {
   width: 100%;
