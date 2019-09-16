@@ -33,7 +33,14 @@
       <div ref="code" class="code"></div>
       <div class="action">
         <b-button variant="success" class="save" @click="save">Save</b-button>
-        <b-button variant="danger" class="remove">Remove</b-button>
+        <b-button
+          variant="danger"
+          class="remove"
+          @click="remove"
+          v-if="removable"
+        >
+          Remove
+        </b-button>
       </div>
     </b-form>
   </b-card-body>
@@ -50,7 +57,8 @@ const defaultText =
 export default {
   props: {
     index: Number,
-    sync: Boolean
+    sync: Boolean,
+    removable: Boolean
   },
   data() {
     return {
@@ -75,12 +83,16 @@ export default {
       lineNumbers: true
     });
     this.getPaneData('inspect' + this.index);
-    console.log(this);
   },
   watch: {
     'tabPane.active': function(val) {
       if (val && this.cm) {
         this.cm.refresh();
+      }
+    },
+    replacedText: function(val) {
+      if (this.cm) {
+        this.cm.setValue(val);
       }
     }
   },
@@ -99,6 +111,9 @@ export default {
         variant: 'success',
         solid: true
       });
+    },
+    remove() {
+      this.$emit('remove', this.index);
     },
     geti18nText(name) {
       return chrome.i18n.getMessage(name);

@@ -18,7 +18,12 @@
         </div>
         <Tabs>
           <TabPane :label="getTabTitle(tab)" v-for="tab in tabList" :key="tab">
-            <Pane :index="tab" :sync="sync" />
+            <Pane
+              :index="tab"
+              :sync="sync"
+              @remove="removeTabList"
+              :removable="removable"
+            />
           </TabPane>
         </Tabs>
       </b-card>
@@ -47,6 +52,9 @@ export default {
   mounted() {
     this.getConfig('sync');
     this.getConfig('tabList');
+    window.reset = () => {
+      this.clear();
+    };
   },
   methods: {
     geti18nText(name) {
@@ -67,9 +75,35 @@ export default {
         }
       });
     },
+    clear() {
+      chrome.storage.sync.clear();
+      chrome.storage.local.clear();
+      window.location.reload();
+    },
+    saveConfig(key, val) {
+      if (this.sync) {
+        chrome.storage.sync.set({ [key]: val }, () => {
+          console.log('chrome sync set: %s, %s', key, val);
+        });
+      }
+      chrome.storage.local.set({ [key]: val }, () => {
+        console.log('chrome local set: %s, %s', key, val);
+      });
+    },
     addTabList() {
       const last = this.tabList.slice().pop();
       this.tabList.push(last + 1);
+      this.saveConfig('tabList', this.tabList);
+    },
+    removeTabList(val) {
+      const index = this.tabList.indexOf(val);
+      this.tabList.splice(index, 1);
+      this.saveConfig('tabList', this.tabList);
+    }
+  },
+  computed: {
+    removable: function() {
+      return this.tabList.length > 1;
     }
   },
   watch: {

@@ -32,6 +32,16 @@ export default {
         this.activeName = nav.label;
       }
     },
+    removeNav(nav) {
+      this.navList = this.navList.filter(item => {
+        if (nav.label === item.label) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+      this.activeName = this.navList[0].label;
+    },
     setActiveName(label) {
       this.activeName = label;
       this.$emit('on-click', this.activeName);

@@ -52,11 +52,16 @@ function watch() {
   gulp.watch(paths.copys.src, copys);
 }
 
-function parcel() {
+function parcelWatch() {
   exec('parcel watch src/options.html --no-hmr');
 }
+
+function parcelBuild() {
+  return exec('parcel build src/options.html --no-source-maps');
+}
+
 const build = gulp.parallel(images, copys);
 
-exports.build = build;
+exports.build = gulp.series(clean, build, parcelBuild);
 
-exports.serve = gulp.series(clean, build, gulp.parallel(parcel, watch));
+exports.serve = gulp.series(clean, build, gulp.parallel(parcelWatch, watch));

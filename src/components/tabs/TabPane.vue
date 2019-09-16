@@ -23,6 +23,11 @@ export default {
       label: this.label
     });
   },
+  beforeDestroy() {
+    this.rootTabs.removeNav({
+      label: this.label
+    });
+  },
   computed: {
     active: function() {
       return this.rootTabs.activeName === this.label;

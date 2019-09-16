@@ -1,3 +1,15 @@
+async function getInspects() {
+  const tabList = await getConfig('tabList');
+}
+
+function getConfig(key) {
+  return new Promise(function(resolve) {
+    chrome.storage.local.get(key, items => {
+      resolve(items);
+    });
+  });
+}
+
 chrome.webRequest.onBeforeRequest.addListener(
   function(details) {
     if (details.url === localStorage.getItem('URL')) {
