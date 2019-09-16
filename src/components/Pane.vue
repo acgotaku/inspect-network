@@ -113,6 +113,7 @@ export default {
         variant: 'success',
         solid: true
       });
+      this.$emit('save');
       chrome.runtime.sendMessage({
         method: 'updateInspects'
       });

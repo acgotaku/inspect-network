@@ -22,6 +22,7 @@
               :index="tab"
               :sync="sync"
               @remove="removeTabList"
+              @save="saveTabList"
               :removable="removable"
             />
           </TabPane>
@@ -93,6 +94,9 @@ export default {
     addTabList() {
       const last = this.tabList.slice().pop();
       this.tabList.push(last + 1);
+      this.saveConfig('tabList', this.tabList);
+    },
+    saveTabList() {
       this.saveConfig('tabList', this.tabList);
     },
     removeTabList(val) {
