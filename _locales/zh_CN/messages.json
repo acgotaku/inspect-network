@@ -37,5 +37,14 @@
   },
   "URLRegex": {
     "message": "网址正则匹配"
+  },
+  "replaceContent": {
+    "message": "替换内容："
+  },
+  "save": {
+    "message": "保存"
+  },
+  "remove": {
+    "message": "删除"
   }
 }

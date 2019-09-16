@@ -29,17 +29,19 @@
           </b-form-group>
         </b-col>
       </b-form-row>
-      <label>Replace Content:</label>
+      <label>{{ geti18nText('replaceContent') }}</label>
       <div ref="code" class="code"></div>
       <div class="action">
-        <b-button variant="success" class="save" @click="save">Save</b-button>
+        <b-button variant="success" class="save" @click="save">
+          {{ geti18nText('save') }}
+        </b-button>
         <b-button
           variant="danger"
           class="remove"
           @click="remove"
           v-if="removable"
         >
-          Remove
+          {{ geti18nText('remove') }}
         </b-button>
       </div>
     </b-form>
@@ -110,6 +112,9 @@ export default {
         title: `Message`,
         variant: 'success',
         solid: true
+      });
+      chrome.runtime.sendMessage({
+        method: 'updateInspects'
       });
     },
     remove() {

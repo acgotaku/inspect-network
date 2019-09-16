@@ -37,5 +37,14 @@
   },
   "URLRegex": {
     "message": "URL regex"
+  },
+  "replaceContent": {
+    "message": "Replace Content:"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "remove": {
+    "message": "Remove"
   }
 }
