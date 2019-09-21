@@ -11,16 +11,12 @@
       </div>
       <b-card no-body>
         <div class="config">
-          <h2 class="config-title">{{ geti18nText('globalConfig') }}</h2>
-          <b-form-checkbox v-model="sync">
-            {{ geti18nText('syncToCloud') }}
-          </b-form-checkbox>
+          <h2 class="config-title">{{ geti18nText('settings') }}</h2>
         </div>
         <Tabs>
           <TabPane :label="getTabTitle(tab)" v-for="tab in tabList" :key="tab">
             <Pane
               :index="tab"
-              :sync="sync"
               @remove="removeTabList"
               @save="saveTabList"
               :removable="removable"
@@ -45,13 +41,11 @@ export default {
   },
   data() {
     return {
-      sync: true,
       tabList: [1],
       name: chrome.i18n.getMessage('appName')
     };
   },
   mounted() {
-    this.getConfig('sync');
     this.getConfig('tabList');
     window.reset = () => {
       this.clear();
@@ -65,11 +59,6 @@ export default {
       return chrome.i18n.getMessage('inspect') + ' ' + index;
     },
     getConfig(key) {
-      chrome.storage.sync.get(key, items => {
-        chrome.storage.local.set({ [key]: items[key] }, () => {
-          console.log('chrome first local set: %s, %s', key, items[key]);
-        });
-      });
       chrome.storage.local.get(key, items => {
         if (items[key] !== undefined) {
           this[key] = items[key];
@@ -77,16 +66,10 @@ export default {
       });
     },
     clear() {
-      chrome.storage.sync.clear();
       chrome.storage.local.clear();
       window.location.reload();
     },
     saveConfig(key, val) {
-      if (this.sync) {
-        chrome.storage.sync.set({ [key]: val }, () => {
-          console.log('chrome sync set: %s, %s', key, val);
-        });
-      }
       chrome.storage.local.set({ [key]: val }, () => {
         console.log('chrome local set: %s, %s', key, val);
       });
@@ -108,16 +91,6 @@ export default {
   computed: {
     removable: function() {
       return this.tabList.length > 1;
-    }
-  },
-  watch: {
-    sync: function(val) {
-      chrome.storage.sync.set({ sync: val }, () => {
-        console.log('chrome sync set: %s, %s', 'sync', val);
-      });
-      chrome.storage.local.set({ sync: val }, () => {
-        console.log('chrome local set: %s, %s', 'sync', val);
-      });
     }
   }
 };

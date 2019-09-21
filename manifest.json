@@ -23,6 +23,7 @@
     "activeTab",
     "<all_urls>",
     "storage",
+    "unlimitedStorage",
     "webRequest",
     "webRequestBlocking"
   ],

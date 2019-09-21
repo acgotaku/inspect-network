@@ -59,7 +59,6 @@ const defaultText =
 export default {
   props: {
     index: Number,
-    sync: Boolean,
     removable: Boolean
   },
   data() {
@@ -125,11 +124,6 @@ export default {
       return chrome.i18n.getMessage(name);
     },
     getPaneData(key) {
-      chrome.storage.sync.get(key, items => {
-        chrome.storage.local.set({ [key]: items[key] }, () => {
-          console.log('chrome first local set: %s, %s', key, items[key]);
-        });
-      });
       chrome.storage.local.get(key, items => {
         const paneData = items[key];
         for (const paneKey in paneData) {
@@ -138,11 +132,6 @@ export default {
       });
     },
     savePaneData(key, val) {
-      if (this.sync) {
-        chrome.storage.sync.set({ [key]: val }, () => {
-          console.log('chrome sync set: %s, %s', key, val);
-        });
-      }
       chrome.storage.local.set({ [key]: val }, () => {
         console.log('chrome local set: %s, %s', key, val);
       });

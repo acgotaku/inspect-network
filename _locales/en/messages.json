@@ -8,11 +8,8 @@
   "newInspect": {
     "message": "New Inspect"
   },
-  "globalConfig": {
-    "message": "Global config"
-  },
-  "syncToCloud": {
-    "message": "Sync to the cloud."
+  "settings": {
+    "message": "Settings"
   },
   "inspect": {
     "message": "Inspect"
