@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const del = require('del');
 const plumber = require('gulp-plumber');
 
+const zip = require('gulp-zip');
 const imagemin = require('gulp-imagemin');
 const mozjpeg = require('imagemin-mozjpeg');
 const pngquant = require('imagemin-pngquant');
@@ -60,8 +61,15 @@ function parcelBuild() {
   return exec('parcel build src/options.html --no-source-maps');
 }
 
+function compress() {
+  return gulp
+    .src('dist/**/*')
+    .pipe(zip('chrome.zip'))
+    .pipe(gulp.dest('dist/'));
+}
+
 const build = gulp.parallel(images, copys);
 
-exports.build = gulp.series(clean, build, parcelBuild);
+exports.build = gulp.series(clean, build, parcelBuild, compress);
 
 exports.serve = gulp.series(clean, build, gulp.parallel(parcelWatch, watch));
